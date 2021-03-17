@@ -4,13 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {createStore} from 'redux'
+import {Provider} from 'react-redux'
 
 const stateChanger = (state, action)=>{
   if(state === undefined){
-    return 0
+    return {n:0}
   }else{
     if(action.type === 'add'){
-      var newState = state + action.payload
+      var newState = {n:state.n + action.payload}
       return newState
     }else{
       return state
@@ -19,34 +20,15 @@ const stateChanger = (state, action)=>{
 }
 
 const store = createStore(stateChanger)
-render()
-store.subscribe(()=>{render()})
 
-function addIf(){
-  if(store.getState() % 2 === 1){
-    store.dispatch({type:'add',payload:2})
-  }
-}
-
-function add2(){
-  setTimeout(()=>{
-    store.dispatch({type:'add',payload:1})
-  },2000)
-}
-
-function render(){
   ReactDOM.render(
-    <React.StrictMode>
-      <App value={store.getState()} store={store}
-      onAdd1={()=>{store.dispatch({type:'add',payload:1})}}
-      onMinus1={()=>{store.dispatch({type:'add',payload:-1})}}
-      onAddIf={addIf}
-      onAdd2={add2}
-      />
-    </React.StrictMode>,
+    <Provider store={store}>
+      <React.StrictMode>
+      <App />
+      </React.StrictMode>
+    </Provider>,
     document.getElementById('root')
   );
-}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
